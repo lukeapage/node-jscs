@@ -26,6 +26,14 @@ describe('rules/require-line-feed-at-file-end', function() {
         expect(checker.checkString('var x;\n//foo\n')).to.have.no.errors();
     });
 
+    it('should not report existing line feed at file end with preceeding block comment', function() {
+        expect(checker.checkString('var x;\n/*foo*/\n')).to.have.no.errors();
+    });
+
+    it('should report no line feed at file end with block comment', function() {
+        expect(checker.checkString('var x;\n/*foo*/')).to.have.one.validation.error.from('requireLineFeedAtFileEnd');
+    });
+
     it('should report on an IIFE with no line feed at EOF', function() {
         expect(checker.checkString('(function() {\nconsole.log(\'Hello World\');\n})();'))
           .to.have.one.validation.error.from('requireLineFeedAtFileEnd');
